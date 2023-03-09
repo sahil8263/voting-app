@@ -1,0 +1,40 @@
+1-->>
+Write a common use-case, where you will use a daemon set instead of replica set.
+
+Replica set is used to ensure that defined set of Pods are running all the time.
+It is used to ensure that all nodes are running the copy of pod. They are commonly used for logging and monitoring for hosts, for example a node needs a service which collects the voting data and stores into database.
+if you want to get data from each node, the best option is to schedule a container on every node that will gather these data from each individual node. 
+if we schedule one container to gather data from all nodes, there is a risk of loosing from whole cluster when any node from whatever reason dies, but having a copy of the same container on every node will help.
+
+######################################################################################
+
+2-->>
+Suppose you have deployed your application using a deployment controller. Assume the initial number of replicas is one. Write the steps needed to update a container's image using deployment, making sure that there is zero downtime.
+
+Solution:
+The Image of the Deployment can updated in the below steps
+
+-> Deploy the Development
+kubectl apply -f kubia-deployment-and-service-v1.yaml
+
+->Check for the minReadySecond param value and set it to 10s so that there is no need to bring the pod downtime
+            
+kubectl explain deploy.spec.minReadySeconds
+kubectl patch deployment kubia -p '{"spec": {"minReadySeconds": 10}}'
+    
+->Use command to set the image value in the Deployment
+
+kubectl set image deployment kubia nodejs=luksa/kubia:v2
+
+####################################################################################################################
+
+3-->>
+You have deployed an application, that is listening at port 8000. You used a replica-set to deploy it and created a NodePort service to make it accessible. But when you test it, somehow the application is not reachable at the port. Write down your approach and sequentially all the steps that you will take to find out the issue.
+
+check node port
+IP,specs
+labels
+selector in YAML file
+check for the syntax
+
+####################################################################################################################
